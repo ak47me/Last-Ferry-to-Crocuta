@@ -9,4 +9,6 @@ public class CardData : ScriptableObject
     public int cardHealth;  // Change to int
     public int attackPower;  // Change to int
     public Sprite cardImage; // Add a reference for the card image
+    public string cardInfo;
+
 }
