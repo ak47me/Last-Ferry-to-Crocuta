@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: King
   m_EditorClassIdentifier: 
   cardName: King
+  cardType: 1
   cardHealth: 10
   attackPower: 5
   cardImage: {fileID: 21300000, guid: 53df9a84a8032c342b0d2af36f4e7e1f, type: 3}
+  cardInfo: 
+  abilityType: 0
+  hasAbility: 1

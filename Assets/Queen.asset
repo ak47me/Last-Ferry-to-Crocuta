@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Queen
   m_EditorClassIdentifier: 
   cardName: Queen
+  cardType: 0
   cardHealth: 1
   attackPower: 5
-  cardImage: {fileID: 0}
+  cardImage: {fileID: 21300000, guid: f8b21e46990a5de42a3128a400a45e45, type: 3}
+  cardInfo: 

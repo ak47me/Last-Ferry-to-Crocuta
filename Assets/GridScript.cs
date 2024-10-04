@@ -11,6 +11,7 @@ public class GridScript : MonoBehaviour
     void Start()
     {
         CreateEmptySlots();
+        
     }
 
     void CreateEmptySlots()
