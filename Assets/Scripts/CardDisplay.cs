@@ -8,60 +8,100 @@ using UnityEngine.EventSystems;
 public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public CardData cardData;
-    public TMP_Text healthText;  // TMP text for health
-    public TMP_Text attackText;  // TMP text for attack
-    public Image cardImage;  
-   // Reference to the Image component for the card
+    public TMP_Text healthText;
+    public TMP_Text attackText;
+    public Image cardImage;
 
-    private Vector3 originalScale;  // To store the card's original scale
-    public float hoverScale = 1.2f; // Scale factor for hover effect
-    public float hoverDuration = 0.2f; // Duration of the hover effect
-    private bool isHovered = false;  // Track hover state
+    private Vector3 originalScale;
+    public float hoverScale = 1.2f;
+    public float hoverDuration = 0.2f;
+    private bool isHovered = false;
 
     void Start()
     {
-        // Store the original scale of the card at the start
         originalScale = transform.localScale;
-
-        // Initialize card data
+        cardData.SetOriginalAttackPower(cardData.attackPower);
         if (cardData != null)
         {
-            SetupCard(cardData);
+            SetupCard(cardData); 
+            // Use the new method to initialize display
+        }
+        else
+        {
+            Debug.LogWarning("CardData is not assigned in CardDisplay.");
         }
     }
 
     public void SetupCard(CardData card)
     {
-        cardData = card;
-
-        // Set health and attack text
-        healthText.text = card.cardHealth.ToString();
-        attackText.text = card.attackPower.ToString();
-
-        // Set card image
-        if (cardImage != null && card.cardImage != null)
+        if (cardData != null)
         {
-            cardImage.sprite = card.cardImage;
+            // Unsubscribe from the previous card's events
+            cardData.OnAttackPowerChanged -= UpdateAttackPowerDisplay;
+            cardData.OnHealthPowerChanged -= updateHealthDisplay;
+        }
+
+        cardData = card;
+        UpdateCardDisplay();
+
+        // Subscribe to attack power and health change events for live updates
+        if (cardData != null)
+        {
+            cardData.OnAttackPowerChanged += UpdateAttackPowerDisplay;
+            cardData.OnHealthPowerChanged += updateHealthDisplay; // Subscribe here
         }
     }
 
-    // This method is called when the mouse enters the card area
-    public void OnPointerEnter(PointerEventData eventData)
+
+    public void UpdateCardDisplay()
     {
-        isHovered = true; // Set hover state to true
+        if (cardData != null)
+        {
+            healthText.text = cardData.cardHealth.ToString();
+            attackText.text = cardData.attackPower.ToString();
+
+            if (cardImage != null && cardData.cardImage != null)
+            {
+                cardImage.sprite = cardData.cardImage;
+            }
+        }
+        else
+        {
+            Debug.LogError("CardData is null when updating display.");
+        }
     }
 
-    // This method is called when the mouse exits the card area
+    private void UpdateAttackPowerDisplay(int newAttackPower)
+    {
+        // Update the attack power text when notified
+        attackText.text = newAttackPower.ToString();
+    }
+
+    public void updateHealthDisplay(int newHealth)
+    {
+        healthText.text = newHealth.ToString();
+
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        isHovered = true;
+    }
+
     public void OnPointerExit(PointerEventData eventData)
     {
-        isHovered = false; // Set hover state to false
+        isHovered = false;
     }
 
     void Update()
     {
-        // Update the scale based on hover state
         Vector3 targetScale = isHovered ? originalScale * hoverScale : originalScale;
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime / hoverDuration);
+    }
+    public void EndGame()
+    {
+        // Logic to determine if the game has ended
 
+        cardData.ResetAttackPower();
     }
 }

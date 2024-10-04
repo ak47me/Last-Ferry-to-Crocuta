@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4932cfb569829a34b96e1323cb8693d2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - mainSceneMusic: {fileID: 8300000, guid: b1ce94f742e9df046996fa851ce2d0ed, type: 3}
+  - combatSceneMusic: {fileID: 8300000, guid: 5ebdfeb2d08f0954abe497232a2e74f4, type: 3}
+  - mapSceneMusic: {fileID: 8300000, guid: 264754317bf008e438f3c48b04906c09, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

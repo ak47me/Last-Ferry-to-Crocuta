@@ -2,91 +2,112 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;  // For using UI components like Image
+using UnityEngine.UI;
 
 public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    private GameObject currentCard;  // Keep track of the card currently in this DropZone
-    private Image dropZoneImage;     // Reference to the Image component of the DropZone
+    public CardData currentCard;  // Keep track of the card currently in this DropZone
+    private Image dropZoneImage;      // Reference to the Image component of the DropZone
+    public int row;                   // Row position in the grid
+    public int column;                // Column position in the grid
 
-    public Color normalColor = Color.gray;        // Default color when not highlighted
-    public Color highlightColor = Color.green;     // Color when highlighted
+    public Color normalColor = Color.gray;
+    public Color highlightColor = Color.green;
 
     private void Start()
     {
-        // Get the Image component (assuming there's an Image component on the DropZone)
         dropZoneImage = GetComponent<Image>();
-
-        // Set initial color (default)
         if (dropZoneImage != null)
         {
             dropZoneImage.color = normalColor;
         }
+    }
+    public bool HasCard()
+    {
+        return currentCard != null;
+    }
+    public CardData GetCard()
+    {
+        return currentCard;
+    }
+
+    public void SetGridPosition(int row, int column)
+    {
+        this.row = row;
+        this.column = column;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Change color when a card is dragged over the DropZone
         if (dropZoneImage != null)
         {
             dropZoneImage.color = highlightColor;
         }
-        Debug.Log("OnEnterDropZone");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // Revert color when the card leaves the DropZone
         if (dropZoneImage != null)
         {
             dropZoneImage.color = normalColor;
         }
-        Debug.Log("OnExitDropZone");
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        Debug.Log(eventData.pointerDrag.name + " dropped onto " + gameObject.name);
+        // Get the draggable object being dropped
+        Draggable draggable = eventData.pointerDrag.GetComponent<Draggable>();
 
-        Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
-        if (d != null)
+        if (draggable != null)
         {
-            // Check if there's already a card in the drop zone
-            if (currentCard == null)
+            // Validate the card type based on row
+            if (CanDropCard(draggable))
             {
-                // Set the dropped card's parent to this drop zone
-                d.parentToReturnTo = this.transform;
-                currentCard = eventData.pointerDrag;  // Store reference to this card
-                RectTransform cardRectTransform = currentCard.GetComponent<RectTransform>();
-                RectTransform dropZoneRectTransform = GetComponent<RectTransform>();
-                //cardRectTransform.sizeDelta = dropZoneRectTransform.sizeDelta;
-                cardRectTransform.SetParent(dropZoneRectTransform, false);  
-                cardRectTransform.anchorMin = new Vector2(0, 0);  // Set anchor to bottom-left
-                cardRectTransform.anchorMax = new Vector2(1, 1);  // Set anchor to top-right
-                cardRectTransform.offsetMin = Vector2.zero;  // Reset the minimum offset
-                cardRectTransform.offsetMax = Vector2.zero;  // Reset the maximum offset
-                cardRectTransform.localPosition = Vector3.zero;  
-                Debug.Log("Card successfully dropped in the DropZone.");
+                currentCard = draggable.cardData;
+                Debug.Log(currentCard);
+                currentCard.posX = this.row;
+                draggable.cardData.posY = this.column;
+
+
+                Debug.Log($"Card of type {draggable.cardData.cardType} dropped in row {row}, column {column}.");
+
+                // Set this DropZone as the new parent of the dropped card
+                draggable.parentToReturnTo = this.transform;
+
+                // Optionally, you can snap the card to the center of the DropZone
+                draggable.transform.position = this.transform.position;
             }
             else
             {
-                // Slot is full, reject the new card
-                dropZoneImage.color = Color.red;
-                Debug.Log("DropZone already has a card!");
-            }
-
-            // Reset the highlight after the card is dropped
-            if (dropZoneImage != null)
-            {
-                dropZoneImage.color = normalColor;
+                Debug.Log("Card type is not allowed in this row.");
             }
         }
     }
 
-    // Method to clear the current card when it is removed (dragged out)
+    private bool CanDropCard(Draggable card)
+    {
+        if (card == null || card.cardData == null)
+        {
+            Debug.LogError("Card is null or cardData is null.");
+            return false;
+        }
+
+        switch (row)
+        {
+            case 0:
+                return card.cardData.cardType == CardData.CardType.Enemy;
+            case 1:
+                return card.cardData.cardType == CardData.CardType.Resource;
+            case 2:
+                return card.cardData.cardType == CardData.CardType.Character;
+            default:
+                Debug.LogWarning("Invalid row");
+                return false;
+        }
+    }
+
     public void ClearCurrentCard()
     {
-        Debug.Log("Card removed from the DropZone.");
         currentCard = null;
     }
 }
