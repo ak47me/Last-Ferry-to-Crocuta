@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f68351223a109684ca2926eba5e2b6de, type: 3}
+  m_Name: BaseMapInfo
+  m_EditorClassIdentifier: 
+  scriptNodes:
+  - {fileID: 11400000, guid: 902d54a6f963c9c43ab658607a21b633, type: 2}
+  - {fileID: 11400000, guid: e65627069cd146c4b929fd451994796a, type: 2}
+  - {fileID: 11400000, guid: db3ff81af14e4aa4cafce22c6f1a06fe, type: 2}
+  - {fileID: 11400000, guid: 65d0e6e4be2197e42b416478759359e8, type: 2}
+  - {fileID: 11400000, guid: f9a89c471d48cc94a88d5c5f27044b3e, type: 2}
+  - {fileID: 11400000, guid: fcd32061690d83242832022dad8c3410, type: 2}
+  - {fileID: 11400000, guid: 56d1c67243fa0484f8069df4e1b2e61d, type: 2}
+  numCombat: 6
+  numItem: 6
+  numCard: 6
+  numChallenge: 1
