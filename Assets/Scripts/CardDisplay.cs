@@ -15,7 +15,14 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private Vector3 originalScale;
     public float hoverScale = 1.2f;
     public float hoverDuration = 0.2f;
-    private bool isHovered = false;
+    public bool isHovered = false;
+    public float displayDelay = 2f; // Time in seconds to wait before displaying the card
+    public float hoverTime = 0f; // Timer to track hover duration
+    public GameObject viewPanel; // Reference to the view_panel GameObject
+    public viewCard viewCardComponent; // Reference to the viewCard component attached to view_panel
+    public CardData hoveredCardData; // Reference to the hovered card's data
+
+
 
     void Start()
     {
@@ -30,6 +37,19 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         {
             Debug.LogWarning("CardData is not assigned in CardDisplay.");
         }
+        //viewPanel.SetActive(false); // Initially hide the viewPanel
+        if (viewPanel == null)
+        {
+            Debug.LogError("viewPanel is not assigned.");
+        }
+        else
+        {
+            viewPanel.SetActive(false); // Initially hide the viewPanel
+        }
+
+        viewCardComponent = viewPanel.GetComponent<viewCard>();
+
+
     }
 
     public void SetupCard(CardData card)
@@ -86,18 +106,55 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerEnter(PointerEventData eventData)
     {
         isHovered = true;
+        hoveredCardData = cardData; // Set the current hovered card data
+        //viewPanel.SetActive(true);
+
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        isHovered = false;
+        isHovered = false; // Reset hover state
+        hoverTime = 0f; // Reset hover time
+        viewPanel.SetActive(false); // Hide the viewPanel when not hovering
+
     }
 
     void Update()
     {
         Vector3 targetScale = isHovered ? originalScale * hoverScale : originalScale;
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime / hoverDuration);
+
+        // Handle the hover timer
+        if (isHovered)
+        {
+            hoverTime += Time.deltaTime; // Increment hover time while hovering
+
+            // If hovered for 3 seconds, display card details
+            if (hoverTime >= displayDelay)
+            {
+                if (hoveredCardData != null)
+                {
+                    Debug.Log("It's going inside");
+                    DisplayCardDetails();
+                }
+            }
+        }
+        else
+        {
+            hoverTime = 0f; // Reset hover time if not hovering
+        }
     }
+
+    void DisplayCardDetails()
+    {
+        if (viewPanel != null && hoveredCardData != null)
+        {
+            Debug.Log("This is working");
+            //viewPanel.SetActive(true); // Show the viewPanel
+            viewCardComponent.SetupCard(hoveredCardData); // Setup card details in the viewPanel
+        }
+    }
+
     public void EndGame()
     {
         // Logic to determine if the game has ended

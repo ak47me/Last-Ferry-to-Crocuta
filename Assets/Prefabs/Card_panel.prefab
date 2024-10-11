@@ -32,9 +32,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5579761378488874073}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 85.6, y: -41.4}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 103.6, y: -41.4}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3897298004545163141
@@ -234,6 +234,10 @@ MonoBehaviour:
   cardImage: {fileID: 1007452032079810162}
   hoverScale: 1.2
   hoverDuration: 0.2
+  displayDelay: 3
+  viewPanel: {fileID: 2394257021442597964, guid: 7738004fdea330d49b302f69caa2d1df, type: 3}
+  viewCardComponent: {fileID: 0}
+  hoveredCardData: {fileID: 0}
 --- !u!114 &4143344445426343015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,9 +391,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5579761378488874073}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 104.7, y: 4.3}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 86.7, y: 4.3}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1212996851741769877
