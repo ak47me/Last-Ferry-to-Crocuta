@@ -43,7 +43,7 @@ public class MapNode : MonoBehaviour
     void OnMouseDown()
     {
         Vector2 playerPos = MapPlayer.Instance.mapPosition;
-
+        
         // Base Case: 
         // Case 1: Check if the player position on map is a neighbour of this
         foreach (MapNodeData neighbour in data.Neighbours)
@@ -56,6 +56,9 @@ public class MapNode : MonoBehaviour
                 MapPlayer.Instance.currentNode = this;
                 MapPlayer.Instance.mapPosition = data.mapPosition;
                 mapNode.ResetShape();
+
+                // Update the MainManager with the new map position
+                MainManager.Instance.SetMapPosition(data.mapPosition);
 
                 Map.Instance.HandleMapMove((int) data.mapPosition.y, (int) data.mapPosition.x);
 
