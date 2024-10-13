@@ -5,28 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance = null;
-
     public AudioClip mainSceneMusic;
     public AudioClip combatSceneMusic;
     public AudioClip mapSceneMusic;
 
     private AudioSource audioSource;
 
-    void Awake()
+    private void Awake()
     {
-        // Ensure only one instance of the AudioManager exists
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);  // Keep this object alive across scenes
-        }
-        else
-        {
-            Destroy(gameObject);  // Destroy duplicate AudioManager objects
-            return;
-        }
-
         audioSource = GetComponent<AudioSource>();
 
         // If there's no AudioSource component, add it dynamically
@@ -36,13 +22,17 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    void Start()
+    public void Initialize()
     {
         // Subscribe to scene changes
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        // Call OnSceneLoaded manually for the initial scene
+        Scene currentScene = SceneManager.GetActiveScene();
+        OnSceneLoaded(currentScene, LoadSceneMode.Single);
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Ensure the audio source is available after scene load
         if (audioSource == null)

@@ -381,6 +381,7 @@
 "Assets/DropZoneHands.cs"
 "Assets/EnemySideManager.cs"
 "Assets/GridScript.cs"
+"Assets/Scripts/AudioLooper.cs"
 "Assets/Scripts/AudioManager.cs"
 "Assets/Scripts/BackButtonImplementation.cs"
 "Assets/Scripts/BackFromCombat.cs"

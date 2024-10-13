@@ -78,6 +78,7 @@
     <Compile Include="Assets\GridScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Scripts\CombatSceneManager.cs" />
+    <Compile Include="Assets\Scripts\AudioLooper.cs" />
     <Compile Include="Assets\Scripts\MapNode.cs" />
     <Compile Include="Assets\Scripts\viewCard.cs" />
     <Compile Include="Assets\CardComponent.cs" />
