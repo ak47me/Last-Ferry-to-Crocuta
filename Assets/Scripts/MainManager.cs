@@ -81,6 +81,15 @@ public class MainManager : MonoBehaviour
         // Get the name of the current scene and tell the AudioManager to play the appropriate music
         string sceneName = scene.name;
         audioManager.PlayMusicForScene(sceneName);
+
+        
+        if (DialogueManager.Instance != null)
+        {
+            Debug.Log("dialogue manager is present in this scene "+ sceneName);
+            ProductionSystem.Instance.ResetSystem();
+            DialogueManager.Instance.FindUIElements(); 
+            DialogueManager.Instance.StartDialogueForScene(sceneName);
+        }
     }
 
     // Method to update the current map position

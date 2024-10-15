@@ -72,7 +72,7 @@ public class AudioManager : MonoBehaviour
         // Loop the audio if the current playback position exceeds the loop end
         if (audioSource.isPlaying && audioSource.timeSamples >= loopEndSamples)
         {
-            Debug.Log("Music reached its end limit");
+            
             audioSource.timeSamples = loopStartSamples; // Reset to loop start
         }
     }

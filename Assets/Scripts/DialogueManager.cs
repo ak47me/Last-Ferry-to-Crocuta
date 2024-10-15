@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-// CREDIT TO FAIAZ BIN NASAR (CMPUT 250 EP) FOR THE BASE IMPLEMENTATION OF THIS
 public class DialogueManager : MonoBehaviour
 {
-
-    // Mod: Made it a singleton for my use case:
     private static DialogueManager _instance;
     public static DialogueManager Instance { get { return _instance; } }
 
@@ -15,73 +12,134 @@ public class DialogueManager : MonoBehaviour
     public GameObject dialogueBox;
     public float dialogueSpd;
 
-    Queue<string> dialogueEntries;
-    bool dialogueActive = false;
-    Coroutine typingCoroutine;
+    private Dictionary<string, Queue<string>> sceneDialogues; // Stores dialogues for each scene
+    private Queue<string> currentDialogue;
+    private bool dialogueActive = false;
+    private Coroutine typingCoroutine;
 
-    
     void Awake()
     {
-        _instance = this;
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject); // Keeps the DialogueManager across scenes
+        }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        dialogueEntries = new Queue<string>();
+        sceneDialogues = new Dictionary<string, Queue<string>>();
         dialogueBox.SetActive(false);
+        FindUIElements(); // Ensure UI elements are found
     }
 
-    // Update is called once per frame
+    public void UpdateUIReferences(TextMeshProUGUI newText, GameObject newDialogueBox)
+    {
+        text = newText;
+        dialogueBox = newDialogueBox;
+        Debug.Log(text);
+
+    }
+
+    public void FindUIElements()
+    {
+        Debug.Log("Inside FindUi elements ");
+        GameObject newDialogueBox = GameObject.Find("DialogueCanvas");
+        
+        
+
+            if (newDialogueBox != null)
+            {
+            TextMeshProUGUI newText = newDialogueBox.transform.Find("DialogueText")?.GetComponent<TextMeshProUGUI>();
+            Debug.Log(newText);
+
+            if (newText != null)
+            {
+                UpdateUIReferences(newText, newDialogueBox);
+                Debug.Log("DialogueCanvas and DialogueText found successfully!");
+            }
+            else
+            {
+                Debug.LogWarning("DialogueText not found inside DialogueCanvas.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("DialogueCanvas not found in the scene.");
+        }
+    }
+
     void Update()
     {
         if (dialogueActive && Input.GetKeyDown(KeyCode.E))
         {
             if (typingCoroutine != null)
             {
-                print("stopping co routine");
                 StopCoroutine(typingCoroutine);
                 typingCoroutine = null;
                 DisplayDialogue();
             }
-            else if (dialogueEntries.Count >= 0)
+            else if (currentDialogue.Count > 0) // Change to > 0 to check correctly
             {
-                print("starting dialogue display");
                 DisplayDialogue();
             }
         }
     }
 
-    public void StartDialogue(List<string> newDialogue)
+    public void AddDialogueForScene(string sceneName, List<string> dialogueLines)
     {
-        if (dialogueActive)
+        if (!sceneDialogues.ContainsKey(sceneName))
         {
-            print("error");
-            return;
+            sceneDialogues[sceneName] = new Queue<string>();
         }
 
-        dialogueBox.SetActive(true);
-        dialogueEntries.Clear();
-
-        foreach (string newSentence in newDialogue)
+        foreach (string line in dialogueLines)
         {
-            print(newSentence);
-            dialogueEntries.Enqueue(newSentence);
+            sceneDialogues[sceneName].Enqueue(line);
         }
-
-        text.text = "press E";
-        dialogueActive = true;
     }
 
-    public void DisplayDialogue()
+    public void StartDialogueForScene(string sceneName)
     {
-        if (dialogueEntries.Count == 0)
+        Debug.Log("Inside StartDialogue scene");
+        
+        // Clear the current dialogue queue to remove leftovers from the previous scene
+        currentDialogue?.Clear();
+
+        if (sceneDialogues.ContainsKey(sceneName))
+        {
+            currentDialogue = new Queue<string>(sceneDialogues[sceneName]);
+
+            if (dialogueActive)
+            {
+                Debug.LogError("Dialogue is already active.");
+                return;
+            }
+
+            dialogueBox.SetActive(true);
+            DisplayDialogue();
+            dialogueActive = true;
+        }
+        else
+        {
+            Debug.LogWarning("No dialogue found for this scene.");
+        }
+    }
+
+
+    private void DisplayDialogue()
+    {
+        if (currentDialogue.Count == 0)
         {
             EndDialogue();
             return;
         }
 
-        string sentence = dialogueEntries.Dequeue();
+        string sentence = currentDialogue.Dequeue();
 
         if (typingCoroutine != null)
         {
@@ -95,6 +153,7 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueBox.SetActive(false);
         dialogueActive = false;
+        
     }
 
     IEnumerator TypeSentence(string sentence)
@@ -106,11 +165,10 @@ public class DialogueManager : MonoBehaviour
             text.text += letter;
             yield return new WaitForSeconds(dialogueSpd);
         }
-
     }
 
     public int DQEntries()
     {
-        return dialogueEntries.Count;
+        return currentDialogue != null ? currentDialogue.Count : 0;
     }
 }
