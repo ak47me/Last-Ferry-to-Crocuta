@@ -8,19 +8,23 @@ public class MapSceneController : MonoBehaviour
     // This function will be called when the player interacts with the Combat button
     public void LoadCombatScene()
     {
-        SceneManager.LoadScene("CombatScene");  // This assumes you will have a CombatScene created in the future
+
+        MainManager.Instance.NextLevel("CombatScene");
+
     }
 
     // Function for the Challenge Scene
     public void LoadChallengeScene()
     {
-        SceneManager.LoadScene("ChallengeScene");
+        MainManager.Instance.NextLevel("ChallengeScene");
+
     }
 
     // Function for the Explore Scene
     public void LoadExploreScene()
     {
-        SceneManager.LoadScene("ExploreScene");
+        MainManager.Instance.NextLevel("ExploreScene");
+
     }
 }
 

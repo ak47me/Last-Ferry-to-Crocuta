@@ -16,6 +16,8 @@ public class MapNode : MonoBehaviour
     public GameObject lineRenderPrefab;
     private List<LineRenderer> linesFromNode = new List<LineRenderer>();
 
+
+
     // Icon details
     public float scale;
     public float enlargeScale;
@@ -36,6 +38,7 @@ public class MapNode : MonoBehaviour
         {
             transform.localScale = new Vector3(scale * selectionScale, scale * selectionScale, 0);
             mainRenderer.color = Color.green;
+            
         }
     }
 
@@ -64,15 +67,16 @@ public class MapNode : MonoBehaviour
 
                 if (data.encounterType == MapNodeData.nodeType.COMBAT)
                 {
-                    SceneManager.LoadScene("CombatScene");
+                    MapDialogueManager.GetInstance().EnterCombatDialogueMode("CombatScene");
                 }
                 else if (data.encounterType == MapNodeData.nodeType.COMBAT)
                 {
-                    SceneManager.LoadScene("ChallengeScene");
+                    MainManager.Instance.NextLevel("ChallengeScene");
+
                 }
                 else
                 {
-                    SceneManager.LoadScene("ExploreScene");
+                    MainManager.Instance.NextLevel("ExploreScene");
                 }
 
                 return;
@@ -95,7 +99,7 @@ public class MapNode : MonoBehaviour
 
                 if (data.encounterType == MapNodeData.nodeType.COMBAT)
                 {
-                    SceneManager.LoadScene("CombatScene");
+                    MapDialogueManager.GetInstance().EnterCombatDialogueMode("CombatScene");
                 }
 
                 return;
@@ -104,6 +108,7 @@ public class MapNode : MonoBehaviour
 
         // Case 3: Do nothing because the player should not be able to go here
         // FIXME: Add some juice to show that this is not accessible
+        MapDialogueManager.GetInstance().EnterDialogueMode("you do not connect to edge");
         print("you do not connect to edge");
     }
 

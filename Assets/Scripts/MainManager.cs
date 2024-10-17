@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,7 @@ public class MainManager : MonoBehaviour
 
     // Reference to AudioManager
     public AudioManager audioManager;
+    [SerializeField] Animator transitionAnim;
 
     // Field to track the current map position
     public Vector2 currentMapPosition;
@@ -59,6 +61,7 @@ public class MainManager : MonoBehaviour
             };
 
             audioManager.Initialize(musicMap, sceneLoopTimes);
+
         }
 
         // Listen to the scene change event
@@ -103,5 +106,19 @@ public class MainManager : MonoBehaviour
     public Vector2 GetMapPosition()
     {
         return currentMapPosition;
+    }
+
+    public void NextLevel(string S)
+    {
+        StartCoroutine(LoadLevel(S));
+    }
+    
+    IEnumerator LoadLevel(string S)
+    {
+        transitionAnim.SetTrigger("End");
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(S);
+        transitionAnim.SetTrigger("Start");
+
     }
 }

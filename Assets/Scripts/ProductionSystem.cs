@@ -72,6 +72,7 @@ public class ProductionSystem : MonoBehaviour
             DialogueManager.Instance.StartDialogueForScene(currentScene);
 
         }
+  
 }
 
 
