@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -5,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class MainManager : MonoBehaviour
 {
     public static MainManager Instance;
-
+    [SerializeField] Animator transitionAnim;
     // Reference to AudioManager
     public AudioManager audioManager;
 
@@ -279,6 +280,18 @@ public class MainManager : MonoBehaviour
         return currentMapPosition;
     }
 
+    public void NextLevel(string S)
+    {
+        StartCoroutine(LoadLevel(S));
+    }
 
+    IEnumerator LoadLevel(string S)
+    {
+        transitionAnim.SetTrigger("End");
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(S);
+        transitionAnim.SetTrigger("Start");
+
+    }
 
 }

@@ -19,10 +19,10 @@ public class MapNode : MonoBehaviour
 
 
     // Icon details
-    public float scale;
-    public float enlargeScale;
-    public float bossScale;
-    public float selectionScale;
+    public float scale = 0.5f;
+    public float enlargeScale = 0.5f;
+    public float bossScale = 0.5f;
+    public float selectionScale = 0.5f;
 
 
     // Start is called before the first frame update
@@ -67,15 +67,16 @@ public class MapNode : MonoBehaviour
                 {
                     // Pass the cards to the MainManager or another manager handling combat
                     MainManager.Instance.LoadCombatCards(data.assignedCards);
-                    SceneManager.LoadScene("RevCombatScene");  //change scene name 
+                    MapDialogueManager.instance.EnterCombatDialogueMode("Enter Combat");
                 }
                 else if (data.encounterType == MapNodeData.nodeType.CHALLENGE)
                 {
-                    SceneManager.LoadScene("ChallengeScene");
+                    MainManager.Instance.NextLevel("ChallengeScene");
                 }
                 else
                 {
-                    SceneManager.LoadScene("ExploreScene");
+                    MainManager.Instance.NextLevel("ExploreScene");
+
                 }
 
                 return;
@@ -99,7 +100,7 @@ public class MapNode : MonoBehaviour
                 if (data.encounterType == MapNodeData.nodeType.COMBAT)
                 {
                     MainManager.Instance.LoadCombatCards(data.assignedCards);
-                    SceneManager.LoadScene("RevCombatScene");
+                    MapDialogueManager.instance.EnterCombatDialogueMode("Enter Combat");
                 }
 
                 return;
@@ -109,6 +110,7 @@ public class MapNode : MonoBehaviour
         // Case 3: Do nothing because the player should not be able to go here
         // FIXME: Add some juice to show that this is not accessible
         print("you do not connect to edge");
+        MapDialogueManager.instance.EnterDialogueMode("you do not connect to edge");
     }
 
     // Determine what to do when a MapNode is hovered on
