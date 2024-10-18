@@ -34,14 +34,14 @@ public class InfoDisplay : MonoBehaviour
         
     }
 
-    public void setInfo(CardInfo cardInfo)
+    public void setInfo(CardView card)
     {
-        setHealth(cardInfo.maxHealth, cardInfo.health);
-        if (cardInfo.type != CardInfo.cardType.HandCard) setAtkDef(cardInfo.atk, cardInfo.def); // Do not set ATK/DEF for a helper/item
+        setHealth(card.cardInfo.maxHealth, card.hpV);
+        if (card.cardInfo.type != CardInfo.cardType.HandCard) setAtkDef(card.atkV, card.defV); // Do not set ATK/DEF for a helper/item
         else clear(atkDef);
-        setName(cardInfo.cardName);
-        setEffect(cardInfo.effectText);
-        setImages(cardInfo.charSpr, cardInfo.suitSpr);
+        setName(card.cardInfo.cardName);
+        setEffect(card.cardInfo.effectText);
+        setImages(card.cardInfo.charSpr, card.cardInfo.suitSpr);
     }
 
     public void setHealth(int max, int current)

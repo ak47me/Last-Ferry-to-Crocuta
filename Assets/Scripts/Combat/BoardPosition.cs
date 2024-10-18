@@ -38,6 +38,8 @@ public class BoardPosition : MonoBehaviour, IDropHandler
         this.card = card;
         card.transform.position = transform.position;
         card.transform.localScale = card.cardInfo.boardScale;
+        card.boardCol = boardCol;
+        card.boardRow = boardRow;
         image.color = baseColor;
     }
 

@@ -11,7 +11,8 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         Drag,
         Place,
         Return,
-        Idle
+        Idle,
+        Fight,
     }
 
     public CardView card;
@@ -31,7 +32,7 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public Vector3 startScale;
     public Vector3 endPos;
     public Vector3 endScale;
-    private float elapsedTime = 0f;
+    public float elapsedTime = 0f;
     public bool locked = false;
 
     public CanvasGroup canvasGroup;
@@ -70,23 +71,28 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 break;
 
             case moveState.Return:
-
+                Return();
                 break;
 
             case moveState.Idle:
                 Idle();
+                break;
+
+            case moveState.Fight:
+                Fight();
                 break;
         }
     }
 
     public void Hover()
     {
-        elapsedTime += Time.deltaTime;
 
-        if (elapsedTime > _moveTime)
+        if (elapsedTime + Time.deltaTime > _moveTime)
         {
             return;
         }
+
+        elapsedTime += Time.deltaTime;
 
         Vector3 lerpPosition = Vector3.Lerp(transform.position, endPos, elapsedTime / _moveTime);
         Vector3 lerpScale = Vector3.Lerp(transform.localScale, endScale, elapsedTime / _moveTime);
@@ -97,12 +103,12 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void Idle()
     {
-        elapsedTime += Time.deltaTime;
-
-        if (elapsedTime > _moveTime)
+        if (elapsedTime + Time.deltaTime > _moveTime)
         {
             return;
         }
+
+        elapsedTime += Time.deltaTime;
 
         Vector3 lerpPosition = Vector3.Lerp(transform.position, startPos, elapsedTime / _moveTime);
         Vector3 lerpScale = Vector3.Lerp(transform.localScale, startScale, elapsedTime / _moveTime);
@@ -118,7 +124,7 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (locked)
+        if (locked || Board.Instance.currentPhase != Board.combatPhase.Play)
         {
             return;
         }
@@ -164,7 +170,7 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (locked)
+        if (locked || Board.Instance.currentPhase != Board.combatPhase.Play)
         {
             return;
         }
@@ -175,7 +181,7 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (locked)
+        if (locked || Board.Instance.currentPhase != Board.combatPhase.Play)
         {
             return;
         }
@@ -206,23 +212,27 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         if (state == moveState.Idle && !eventData.dragging)
         {
-            elapsedTime = 0f;
-
-            startPos = transform.position;
-
-            if (transform.localScale == card.cardInfo.boardScale)
+            if (Board.Instance.currentPhase == Board.combatPhase.Play)
             {
-                endPos = startPos + new Vector3(0, _verticalMoveAmount / 5, 0);
-                endScale = startScale * 1.05f;
-            }
-            else
-            {
-                endPos = startPos + new Vector3(0, _verticalMoveAmount, 0);
-                endScale = startScale * _scaleAmount;
-            }
-            state = moveState.Hover;
+                elapsedTime = 0f;
 
-            InfoDisplay.Instance.setInfo(card.cardInfo);
+                startPos = transform.position;
+
+                if (transform.localScale == card.cardInfo.boardScale)
+                {
+                    endPos = startPos + new Vector3(0, _verticalMoveAmount / 5, 0);
+                    endScale = startScale * 1.05f;
+                }
+                else
+                {
+                    endPos = startPos + new Vector3(0, _verticalMoveAmount, 0);
+                    endScale = startScale * _scaleAmount;
+                }
+                state = moveState.Hover;
+
+            }
+
+            InfoDisplay.Instance.setInfo(card);
             InfoDisplay.Instance.enable();
         }
     }
@@ -234,5 +244,27 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             elapsedTime = 0f;
             state = moveState.Idle;
         }
+    }
+
+    public void Fight()
+    {
+        if (elapsedTime + Time.deltaTime > _moveTime)
+        {
+            state = moveState.Idle;
+            elapsedTime = 0;
+            return;
+        }
+
+        elapsedTime += Time.deltaTime;
+
+        Vector3 lerpPosition = Vector3.Lerp(transform.position, startPos, elapsedTime / _moveTime);
+
+        transform.position = lerpPosition;
+    }
+
+    public void Return()
+    {
+        print("Stuck in return");
+        return;
     }
 }
