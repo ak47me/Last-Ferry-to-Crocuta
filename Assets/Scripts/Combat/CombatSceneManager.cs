@@ -8,6 +8,7 @@ public class CombatSceneManager : MonoBehaviour
     public static CombatSceneManager Instance { get { return _instance; } }
 
     private List<CardInfo> enemyCards = new List<CardInfo>();
+    private List<CardInfo> keyCards = new List<CardInfo>();
 
     void Awake()
     {
@@ -34,11 +35,13 @@ public class CombatSceneManager : MonoBehaviour
 
             // Retrieve the assigned cards for the node if they exist
             enemyCards = MainManager.Instance.GetAssignedCardsForPosition(mapPosition);
-            if (enemyCards != null && enemyCards.Count > 0)
+            keyCards = MainManager.Instance.SelectKeyCardsForCombat();
+            if (enemyCards != null && enemyCards.Count > 0 && keyCards!=null && keyCards.Count>0)
             {
                 Debug.Log("Using previously assigned cards for combat at position: " + mapPosition);
                 // Display or use these cards in the combat scene
-                Debug.Log("Loaded combat cards for the battle in combat scene manager: " + enemyCards.Count + " cards.");
+                Debug.Log("Loaded combat enemy cards for the battle in combat scene manager: " + enemyCards.Count + " cards.");
+                Debug.Log("Loaded combat key cards for the battle from Main in combat scene manager"+ keyCards.Count + "cards.");
                 foreach (CardInfo card in enemyCards)
                 {
                     if (card != null)
@@ -46,6 +49,13 @@ public class CombatSceneManager : MonoBehaviour
                         Debug.Log("Loaded combat card: " + card.cardName);
                     }
                 }
+                foreach (CardInfo card in keyCards)
+                {
+                    if (card != null)
+                    {
+                        Debug.Log("Loaded combat key card: " + card.cardName);
+                    }
+                } 
             }
             else
             {
@@ -62,5 +72,9 @@ public class CombatSceneManager : MonoBehaviour
     public List<CardInfo> GetEnemyCards()
     {
         return enemyCards;
+    }
+    public List<CardInfo> GetKeyCards()
+    {
+        return keyCards;
     }
 }

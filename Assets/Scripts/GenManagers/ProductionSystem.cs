@@ -51,16 +51,16 @@ public class ProductionSystem : MonoBehaviour
             DialogueManager.Instance.AddDialogueForScene(currentScene, dialogueLines);
             DialogueManager.Instance.StartDialogueForScene(currentScene);
         }
-        else if (currentScene == "RevCombatScene")
-        {
-            List<string> combatDialogue = new List<string>
-        {   
-            "Welcome to combat!"
-        };
+        //else if (currentScene == "RevCombatScene")
+        //{
+        //    List<string> combatDialogue = new List<string>
+        //{   
+        //    "Welcome to combat!"
+        //};
 
-            DialogueManager.Instance.AddDialogueForScene(currentScene, combatDialogue);
-            DialogueManager.Instance.StartDialogueForScene(currentScene);
-        }
+        //    DialogueManager.Instance.AddDialogueForScene(currentScene, combatDialogue);
+        //    DialogueManager.Instance.StartDialogueForScene(currentScene);
+        //}
         //else if (currentScene == "Main")
         //{
         //    List<string> MainSceneDialogue = new List<string>

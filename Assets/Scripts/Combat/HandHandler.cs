@@ -6,8 +6,8 @@ public class HandHandler : MonoBehaviour
 {
     // Credit to Sinuous for code found in this video: https://www.youtube.com/watch?v=PybdYrUKXfo
 
-    private static HandHandler _instance;
-    public static HandHandler Instance { get { return _instance; } }
+    //private static HandHandler _instance;
+    //public static HandHandler Instance { get { return _instance; } }
 
     public GameObject cardPrefab;
     public float fanSpread;
@@ -16,17 +16,31 @@ public class HandHandler : MonoBehaviour
     public Transform handTransform;
     public List<GameObject> hand = new List<GameObject>();
     public List<CardInfo> cardData;
-
+    public static HandHandler Instance { get; private set; }
     // Awaken the singleton
-    void Awake()
+    private void Awake()
     {
-        _instance = this;
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        // Initialize hand cards if available
+        if (MainManager.Instance != null)
+        {
+            cardData = MainManager.Instance.handCards; // Get hand cards from MainManager
+            AddStartingCards(); // Initialize the cards in hand
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        AddStartingCards();
+        // No need to add starting cards here
     }
 
     // Update is called once per frame

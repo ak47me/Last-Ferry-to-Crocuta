@@ -390,9 +390,13 @@ public class Map : MonoBehaviour
             // Assign cards to the current map position only if they haven't been assigned before
             if (map[y][x].assignedCards == null)
             {
-                Debug.Log("Assigning cards to node on map position: " + mapPosition);
+                Debug.Log("Assigning enemy cards to node on map position: " + mapPosition);
+                
                 map[y][x].assignedCards = GetRandomEnemyCards(3); // Assign 3 random cards to the node
+                //map[y][x].assignedKeyCards = MainManager.Instance.SelectKeyCardsForCombat();
                 MainManager.Instance.AssignCardsToPosition(mapPosition, map[y][x].assignedCards); // Update MainManager with the assigned cards
+                //MainManager.Instance.AssignCardsToPosition(mapPosition, map[y][x].assignedKeyCards);
+                Debug.Log("Completed operation successfully in assign encounter");
             }
         }
         else if (neighbour3)
@@ -402,9 +406,13 @@ public class Map : MonoBehaviour
                 map[y][x].encounterType = MapNodeData.nodeType.COMBAT;
                 if (map[y][x].assignedCards == null)
                 {
-                    Debug.Log("Assigning cards to node on map position: " + mapPosition);
+                    Debug.Log("Assigning enemy cards to node on map position: " + mapPosition);
+                    Debug.Log("Assigning character cards to node on map position: " + mapPosition);
                     map[y][x].assignedCards = GetRandomEnemyCards(3); // Assign 3 random cards to the node
+                    //map[y][x].assignedKeyCards = MainManager.Instance.SelectKeyCardsForCombat();
                     MainManager.Instance.AssignCardsToPosition(mapPosition, map[y][x].assignedCards); // Update MainManager with the assigned cards
+                    //MainManager.Instance.AssignCardsToPosition(mapPosition, map[y][x].assignedKeyCards);
+                    Debug.Log("Completed operation successfully in assign encounter");
                 }
                 return;
             }
@@ -417,9 +425,13 @@ public class Map : MonoBehaviour
                 map[y][x].encounterType = MapNodeData.nodeType.COMBAT;
                 if (map[y][x].assignedCards == null)
                 {
-                    Debug.Log("Assigning cards to node on map position: " + mapPosition);
+                    Debug.Log("Assigning enemy cards to node on map position: " + mapPosition);
+                    //Debug.Log("Assigning character cards to node on map position: " + mapPosition);
                     map[y][x].assignedCards = GetRandomEnemyCards(3); // Assign 3 random cards to the node
+                    //map[y][x].assignedKeyCards = MainManager.Instance.SelectKeyCardsForCombat();
                     MainManager.Instance.AssignCardsToPosition(mapPosition, map[y][x].assignedCards); // Update MainManager with the assigned cards
+                    //MainManager.Instance.AssignCardsToPosition(mapPosition, map[y][x].assignedKeyCards);
+                    Debug.Log("Completed operation successfully in assign encounter");
                 }
             }
             else map[y][x].encounterType = MapNodeData.nodeType.ITEM;

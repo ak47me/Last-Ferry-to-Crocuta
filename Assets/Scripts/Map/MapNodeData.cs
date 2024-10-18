@@ -27,6 +27,7 @@ public class MapNodeData
     public nodeType encounterType = nodeType.UNASSIGNED;
     // Field to store assigned cards
     public List<CardInfo> assignedCards = null;
+    public List<CardInfo> assignedKeyCards = null;
     // New property to hold enemy cards for the node
 
     // New property to hold enemy cards for the node
@@ -48,7 +49,10 @@ public class MapNodeData
     {
         return assignedCards != null && assignedCards.Count > 0;
     }
-
+    public bool HasAssignedKeyCards()
+    {
+        return assignedKeyCards != null && assignedKeyCards.Count > 0;
+    }
     // Set up real coordinates in Game Space based on some information
     public void SetVisualPosition(float minX, float minY, float xOffset, float yOffset)
     {
