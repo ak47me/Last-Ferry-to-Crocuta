@@ -16,6 +16,8 @@ public class MapNode : MonoBehaviour
     public GameObject lineRenderPrefab;
     private List<LineRenderer> linesFromNode = new List<LineRenderer>();
 
+
+
     // Icon details
     public float scale;
     public float enlargeScale;
@@ -38,7 +40,6 @@ public class MapNode : MonoBehaviour
             mainRenderer.color = Color.green;
         }
     }
-
     // Determine what to do when a MapNode is clicked on
     void OnMouseDown()
     {
@@ -48,22 +49,27 @@ public class MapNode : MonoBehaviour
         // Case 1: Check if the player position on map is a neighbour of this
         foreach (MapNodeData neighbour in data.Neighbours)
         {
-            if (neighbour.mapPosition.x == playerPos.x && neighbour.mapPosition.y == playerPos.y && !data.crossedOut && (Map.Instance.completed[(int) playerPos.y][(int) playerPos.x] || Map.Instance.completed[(int) data.mapPosition.y][(int) data.mapPosition.x]))
+            if (neighbour.mapPosition.x == playerPos.x && neighbour.mapPosition.y == playerPos.y && !data.crossedOut && (Map.Instance.completed[(int)playerPos.y][(int)playerPos.x] || Map.Instance.completed[(int)data.mapPosition.y][(int)data.mapPosition.x]))
             {
                 // Signal for the player to move toward this point and end the function
                 print("edge connects to you");
                 MapNode mapNode = MapPlayer.Instance.currentNode;
                 MapPlayer.Instance.currentNode = this;
                 MapPlayer.Instance.mapPosition = data.mapPosition;
+                MainManager.Instance.SetMapPosition(data.mapPosition);
                 mapNode.ResetShape();
 
-                Map.Instance.HandleMapMove((int) data.mapPosition.y, (int) data.mapPosition.x);
+
+
+                Map.Instance.HandleMapMove((int)data.mapPosition.y, (int)data.mapPosition.x);
 
                 if (data.encounterType == MapNodeData.nodeType.COMBAT)
                 {
-                    SceneManager.LoadScene("CombatScene");
+                    // Pass the cards to the MainManager or another manager handling combat
+                    MainManager.Instance.LoadCombatCards(data.assignedCards);
+                    SceneManager.LoadScene("RevCombatScene");  //change scene name 
                 }
-                else if (data.encounterType == MapNodeData.nodeType.COMBAT)
+                else if (data.encounterType == MapNodeData.nodeType.CHALLENGE)
                 {
                     SceneManager.LoadScene("ChallengeScene");
                 }
@@ -88,11 +94,12 @@ public class MapNode : MonoBehaviour
                 MapPlayer.Instance.mapPosition = data.mapPosition;
                 mapNode.ResetShape();
 
-                Map.Instance.HandleMapMove((int) data.mapPosition.y, (int) data.mapPosition.x);
+                Map.Instance.HandleMapMove((int)data.mapPosition.y, (int)data.mapPosition.x);
 
                 if (data.encounterType == MapNodeData.nodeType.COMBAT)
                 {
-                    SceneManager.LoadScene("CombatScene");
+                    MainManager.Instance.LoadCombatCards(data.assignedCards);
+                    SceneManager.LoadScene("RevCombatScene");
                 }
 
                 return;
@@ -136,7 +143,7 @@ public class MapNode : MonoBehaviour
         else transform.localScale *= scale;
 
         crossRenderer.enabled = data.crossedOut;
-        
+
         for (int i = 0; i < data.Neighbours.Count; i++)
         {
             GameObject lrPrefab = Instantiate(lineRenderPrefab, this.transform);
