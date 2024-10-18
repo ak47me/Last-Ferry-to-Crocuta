@@ -4150,6 +4150,7 @@ m_ResolvedPackages:
     - 5.1.0
     - 5.1.1
     - 6.0.1
+    - 6.0.2
     compatible:
     - 5.0.0
     - 5.0.1
@@ -4157,7 +4158,8 @@ m_ResolvedPackages:
     - 5.1.0
     - 5.1.1
     - 6.0.1
-    recommended: 6.0.1
+    - 6.0.2
+    recommended: 6.0.2
     deprecated: []
   dependencies:
   - name: com.unity.ugui
