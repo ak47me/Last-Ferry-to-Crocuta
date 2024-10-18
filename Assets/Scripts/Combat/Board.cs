@@ -627,10 +627,13 @@ public int fightIndex = 0;
     public void Win()
     {
         print("player wins");
+        WinManager.instance.EnterDialogueMode("You have won the Combat press Y to go back to the map");
     }
 
     public void GameOver()
     {
         print("you lose");
+        WinManager.instance.EnterDialogueMode("You lost press Y to go back to the map");
+
     }
 }
