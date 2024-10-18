@@ -33,6 +33,7 @@ public class ProductionSystem : MonoBehaviour
     }
 
     private void CheckAndSetDialogue()
+<<<<<<< HEAD
 {
     string currentScene = SceneManager.GetActiveScene().name;
 
@@ -43,13 +44,52 @@ public class ProductionSystem : MonoBehaviour
     {
         List<string> dialogueLines = new List<string>
         {
+=======
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+
+        // Clear the dialogue queue when a new scene is loaded to prevent leftover dialogues
+        DialogueManager.Instance.EndDialogue();
+
+        if (currentScene == "DialogueDemoScene")
+        {
+            List<string> dialogueLines = new List<string>
+        {
+>>>>>>> 60dced96e2b7f117641b1a46bf659893b04b909c
             "Hello! Welcome to the start of the Tech Demo where I display that dialogue works! WOWZA! Press E to continue.",
             "If you are reading this, you ended up in a timeline where options 1 and 2 in my production system are true.",
             "Press E and then W to see what you get next time or press S to continue to the map."
         };
 
+<<<<<<< HEAD
         DialogueManager.Instance.AddDialogueForScene(currentScene, dialogueLines);
         DialogueManager.Instance.StartDialogueForScene(currentScene);
+=======
+            DialogueManager.Instance.AddDialogueForScene(currentScene, dialogueLines);
+            DialogueManager.Instance.StartDialogueForScene(currentScene);
+        }
+        else if (currentScene == "RevCombatScene")
+        {
+            List<string> combatDialogue = new List<string>
+        {   
+            "Welcome to combat!"
+        };
+
+            DialogueManager.Instance.AddDialogueForScene(currentScene, combatDialogue);
+            DialogueManager.Instance.StartDialogueForScene(currentScene);
+        }
+        //else if (currentScene == "Main")
+        //{
+        //    List<string> MainSceneDialogue = new List<string>
+        //    {
+        //        "Hey There! Welcome to the village. Your family is waiting for you! Help them reach Corcuta safely!"
+        //    };
+
+        //    DialogueManager.Instance.AddDialogueForScene(currentScene, MainSceneDialogue);
+        //    DialogueManager.Instance.StartDialogueForScene(currentScene);
+
+        //}
+>>>>>>> 60dced96e2b7f117641b1a46bf659893b04b909c
     }
     else if (currentScene == "CombatScene")
     {
@@ -74,6 +114,7 @@ public class ProductionSystem : MonoBehaviour
         }
   
 }
+
 
 
     public void ResetSystem()

@@ -55,13 +55,13 @@ public class Map : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     // Generates a map using a PCG algorithm
@@ -69,10 +69,10 @@ public class Map : MonoBehaviour
     {
         // Determine our starting position
         SetAndModSeed();
-        int startCol = width/2;
+        int startCol = width / 2;
         map[height - 1][startCol].displayable = true;
         map[height - 1][startCol].encounterType = MapNodeData.nodeType.START;
-        MapPlayer.Instance.setMapPosition((float) startCol, (float) height - 1);
+        MapPlayer.Instance.setMapPosition((float)startCol, (float)height - 1);
         completed[height - 1][startCol] = true;
 
         // Prepare a starting map node, and confirm we want to generate
@@ -106,7 +106,7 @@ public class Map : MonoBehaviour
                     {
                         minX = (int)frontierItem.x - 1;
                     }
-                    
+
                     if (frontierItem.x + 1 < width && frontierItem.x < maxX)
                     {
                         maxX = (int)frontierItem.x + 1;
@@ -122,7 +122,7 @@ public class Map : MonoBehaviour
                     map[0][bossCol].Neighbours.Add(map[(int)frontierItem.y][(int)frontierItem.x]);
                 }
 
-                if (map[curRow+2][bossCol].displayable && !map[curRow+1][bossCol].displayable)
+                if (map[curRow + 2][bossCol].displayable && !map[curRow + 1][bossCol].displayable)
                 {
                     map[0][bossCol].Neighbours.Add(map[curRow + 2][bossCol]);
                 }
@@ -204,7 +204,7 @@ public class Map : MonoBehaviour
                         map[curRow][(int)curNode.x - 1].displayable = true;
                         map[curRow][(int)curNode.x - 1].Neighbours.Add(map[(int)curNode.y][(int)curNode.x]);
                         map[curRow][(int)curNode.x - 1].Neighbours.Add(map[(int)curNode.y][(int)curNode.x - 2]);
-                        successors.Remove((int)curNode.x-1);
+                        successors.Remove((int)curNode.x - 1);
                         //Debug.Log("connected2: " + curRow.ToString() + " " + (curNode.x - 1).ToString() + " with " + curNode.y.ToString() + " " + (curNode.x - 2).ToString());
                         //Debug.Log("connected2: " + curRow.ToString() + " " + (curNode.x - 1).ToString() + " with " + curNode.y.ToString() + " " + (curNode.x).ToString());
                         frontier.Add(new Vector3(curNode.x - 1, curRow, 1));
@@ -274,7 +274,7 @@ public class Map : MonoBehaviour
                     float pSuccessors = Random.Range(0f, 1f);
                     if (pSuccessors < 0.4) successorsIdx = 0;
                     else if (pSuccessors < 0.6) successorsIdx = 1;
-                    else successorsIdx = successors.Count-1;
+                    else successorsIdx = successors.Count - 1;
                 }
                 else
                 {
@@ -287,9 +287,9 @@ public class Map : MonoBehaviour
                 map[curRow][curCol].Neighbours.Add(map[(int)curNode.y][(int)curNode.x]);
                 //Debug.Log("connected5: " + curRow.ToString() + " " + curCol.ToString() + " with " + curNode.y.ToString() + " " + curNode.x.ToString());
 
-                if (curRow + 2 <= height-1 && map[curRow+2][curCol].displayable && !map[curRow+1][curCol].displayable)
+                if (curRow + 2 <= height - 1 && map[curRow + 2][curCol].displayable && !map[curRow + 1][curCol].displayable)
                 {
-                    map[curRow][curCol].Neighbours.Add(map[(int)curRow+2][curCol]);
+                    map[curRow][curCol].Neighbours.Add(map[(int)curRow + 2][curCol]);
                     //Debug.Log("connected5: " + curRow.ToString() + " " + curCol.ToString() + " with " + (curRow+2).ToString() + " " + curCol.ToString());
                 }
 
@@ -312,7 +312,7 @@ public class Map : MonoBehaviour
 
                     // STEP 2: SET UP MAPNODE WITH INFORMATION NEEDED
                     MapNode mapNode = MapNodeObj.GetComponent<MapNode>();
-                    mapNode.InitNode(data, mapInfoList.scriptNodes[(int) data.encounterType]);
+                    mapNode.InitNode(data, mapInfoList.scriptNodes[(int)data.encounterType]);
 
                     // STEP 3: ASSIGN IT A POSITION SOMEHOW
                     mapNode.transform.position = data.visualPosition;
@@ -340,8 +340,8 @@ public class Map : MonoBehaviour
         maxX = nodeBounds.max.x * transform.localScale.x - xBoundSpace;
         minY = nodeBounds.min.y * transform.localScale.y + yBoundSpace;
         maxY = nodeBounds.max.y * transform.localScale.y;
-        xOffset = 1.2f*(maxX - minX) / width;
-        yOffset = 1f*(maxY - minY) / height;
+        xOffset = 1.2f * (maxX - minX) / width;
+        yOffset = 1f * (maxY - minY) / height;
 
         for (int i = 0; i < height; i++)
         {
@@ -364,42 +364,98 @@ public class Map : MonoBehaviour
         Random.InitState(currentSeed);
     }
 
-    private void assignEncounter(int y, int x) {
+    private void assignEncounter(int y, int x)
+    {
         bool neighbour3 = map[y][x].Neighbours.Count >= 3;
         bool combatCondition = CombatRowCondition(y);
         bool challengable = y <= height / 2;
+        Vector2 mapPosition = map[y][x].mapPosition; // Track map position
 
-        if ((neighbour3 || combatCondition) && (challengable && !challengeAssigned)) {
+        // Check if cards are already assigned for the current map position in MainManager
+        if (MainManager.Instance != null && MainManager.Instance.AreCardsAssignedToPosition(mapPosition))
+        {
+            Debug.Log("Cards already assigned to the current map position: " + mapPosition);
+            map[y][x].assignedCards = MainManager.Instance.GetAssignedCardsForPosition(mapPosition);
+            return; // Exit if cards have already been assigned to this position
+        }
+
+        if ((neighbour3 || combatCondition) && (challengable && !challengeAssigned))
+        {
             challengeAssigned = true;
             map[y][x].encounterType = MapNodeData.nodeType.CHALLENGE;
         }
         else if (combatCondition)
         {
             map[y][x].encounterType = MapNodeData.nodeType.COMBAT;
+            // Assign cards to the current map position only if they haven't been assigned before
+            if (map[y][x].assignedCards == null)
+            {
+                Debug.Log("Assigning cards to node on map position: " + mapPosition);
+                map[y][x].assignedCards = GetRandomEnemyCards(3); // Assign 3 random cards to the node
+                MainManager.Instance.AssignCardsToPosition(mapPosition, map[y][x].assignedCards); // Update MainManager with the assigned cards
+            }
         }
         else if (neighbour3)
         {
-            // Prevents a surplus of easy item encounters.
             if (map[y + 2][x].encounterType != MapNodeData.nodeType.COMBAT)
             {
                 map[y][x].encounterType = MapNodeData.nodeType.COMBAT;
+                if (map[y][x].assignedCards == null)
+                {
+                    Debug.Log("Assigning cards to node on map position: " + mapPosition);
+                    map[y][x].assignedCards = GetRandomEnemyCards(3); // Assign 3 random cards to the node
+                    MainManager.Instance.AssignCardsToPosition(mapPosition, map[y][x].assignedCards); // Update MainManager with the assigned cards
+                }
                 return;
             }
 
             SetAndModSeed();
 
             float itemOverCombat = Random.Range(0f, 1f);
-            if (itemOverCombat < 0.5) map[y][x].encounterType = MapNodeData.nodeType.COMBAT;
+            if (itemOverCombat < 0.5)
+            {
+                map[y][x].encounterType = MapNodeData.nodeType.COMBAT;
+                if (map[y][x].assignedCards == null)
+                {
+                    Debug.Log("Assigning cards to node on map position: " + mapPosition);
+                    map[y][x].assignedCards = GetRandomEnemyCards(3); // Assign 3 random cards to the node
+                    MainManager.Instance.AssignCardsToPosition(mapPosition, map[y][x].assignedCards); // Update MainManager with the assigned cards
+                }
+            }
             else map[y][x].encounterType = MapNodeData.nodeType.ITEM;
         }
         else
         {
             SetAndModSeed();
             float itemCondition = Random.Range(0f, 1f);
-            if (itemCondition < 0.75) map[y][x].encounterType = MapNodeData.nodeType.ITEM;
-            else map[y][x].encounterType = MapNodeData.nodeType.CARDS;
+            if (itemCondition < 0.75)
+                map[y][x].encounterType = MapNodeData.nodeType.ITEM;
+            else
+                map[y][x].encounterType = MapNodeData.nodeType.CARDS;
         }
     }
+
+
+    // Helper method to get random enemy cards from MainManager's list
+    private List<CardInfo> GetRandomEnemyCards(int count)
+    {
+        List<CardInfo> randomCards = new List<CardInfo>();
+        List<CardInfo> availableCards = new List<CardInfo>(MainManager.Instance.enemyCards); // Create a copy to avoid modifying the original list
+
+        // Ensure that the count does not exceed the available cards
+        count = Mathf.Min(count, availableCards.Count);
+
+        for (int i = 0; i < count; i++)
+        {
+            int randomIndex = Random.Range(0, availableCards.Count);
+            randomCards.Add(availableCards[randomIndex]);
+            availableCards.RemoveAt(randomIndex); // Remove the selected card to avoid duplicates
+        }
+
+        return randomCards;
+    }
+
+
 
     public void crossOutNodes()
     {

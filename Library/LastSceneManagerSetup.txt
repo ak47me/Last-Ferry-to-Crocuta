@@ -1,5 +1,9 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Scenes/DialogueDemoScene.unity
+=======
+- path: Assets/Scenes/Main.unity
+>>>>>>> 60dced96e2b7f117641b1a46bf659893b04b909c
   isLoaded: 1
   isActive: 1
   isSubScene: 0

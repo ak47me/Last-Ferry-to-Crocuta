@@ -41,7 +41,6 @@ public class MapNode : MonoBehaviour
             
         }
     }
-
     // Determine what to do when a MapNode is clicked on
     void OnMouseDown()
     {
@@ -51,15 +50,17 @@ public class MapNode : MonoBehaviour
         // Case 1: Check if the player position on map is a neighbour of this
         foreach (MapNodeData neighbour in data.Neighbours)
         {
-            if (neighbour.mapPosition.x == playerPos.x && neighbour.mapPosition.y == playerPos.y && !data.crossedOut && (Map.Instance.completed[(int) playerPos.y][(int) playerPos.x] || Map.Instance.completed[(int) data.mapPosition.y][(int) data.mapPosition.x]))
+            if (neighbour.mapPosition.x == playerPos.x && neighbour.mapPosition.y == playerPos.y && !data.crossedOut && (Map.Instance.completed[(int)playerPos.y][(int)playerPos.x] || Map.Instance.completed[(int)data.mapPosition.y][(int)data.mapPosition.x]))
             {
                 // Signal for the player to move toward this point and end the function
                 print("edge connects to you");
                 MapNode mapNode = MapPlayer.Instance.currentNode;
                 MapPlayer.Instance.currentNode = this;
                 MapPlayer.Instance.mapPosition = data.mapPosition;
+                MainManager.Instance.SetMapPosition(data.mapPosition);
                 mapNode.ResetShape();
 
+<<<<<<< HEAD
                 // Update the MainManager with the new map position
                 MainManager.Instance.SetMapPosition(data.mapPosition);
 
@@ -68,8 +69,19 @@ public class MapNode : MonoBehaviour
                 if (data.encounterType == MapNodeData.nodeType.COMBAT)
                 {
                     MapDialogueManager.GetInstance().EnterCombatDialogueMode("CombatScene");
+=======
+
+
+                Map.Instance.HandleMapMove((int)data.mapPosition.y, (int)data.mapPosition.x);
+
+                if (data.encounterType == MapNodeData.nodeType.COMBAT)
+                {
+                    // Pass the cards to the MainManager or another manager handling combat
+                    MainManager.Instance.LoadCombatCards(data.assignedCards);
+                    SceneManager.LoadScene("RevCombatScene");  //change scene name 
+>>>>>>> 60dced96e2b7f117641b1a46bf659893b04b909c
                 }
-                else if (data.encounterType == MapNodeData.nodeType.COMBAT)
+                else if (data.encounterType == MapNodeData.nodeType.CHALLENGE)
                 {
                     MainManager.Instance.NextLevel("ChallengeScene");
 
@@ -95,11 +107,16 @@ public class MapNode : MonoBehaviour
                 MapPlayer.Instance.mapPosition = data.mapPosition;
                 mapNode.ResetShape();
 
-                Map.Instance.HandleMapMove((int) data.mapPosition.y, (int) data.mapPosition.x);
+                Map.Instance.HandleMapMove((int)data.mapPosition.y, (int)data.mapPosition.x);
 
                 if (data.encounterType == MapNodeData.nodeType.COMBAT)
                 {
+<<<<<<< HEAD
                     MapDialogueManager.GetInstance().EnterCombatDialogueMode("CombatScene");
+=======
+                    MainManager.Instance.LoadCombatCards(data.assignedCards);
+                    SceneManager.LoadScene("RevCombatScene");
+>>>>>>> 60dced96e2b7f117641b1a46bf659893b04b909c
                 }
 
                 return;
@@ -144,7 +161,7 @@ public class MapNode : MonoBehaviour
         else transform.localScale *= scale;
 
         crossRenderer.enabled = data.crossedOut;
-        
+
         for (int i = 0; i < data.Neighbours.Count; i++)
         {
             GameObject lrPrefab = Instantiate(lineRenderPrefab, this.transform);

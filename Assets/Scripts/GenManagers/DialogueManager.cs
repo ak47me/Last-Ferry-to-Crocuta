@@ -49,11 +49,19 @@ public class DialogueManager : MonoBehaviour
     {
         Debug.Log("Inside FindUi elements ");
         GameObject newDialogueBox = GameObject.Find("DialogueCanvas");
+<<<<<<< HEAD
         
         
 
             if (newDialogueBox != null)
             {
+=======
+
+
+
+        if (newDialogueBox != null)
+        {
+>>>>>>> 60dced96e2b7f117641b1a46bf659893b04b909c
             TextMeshProUGUI newText = newDialogueBox.transform.Find("DialogueText")?.GetComponent<TextMeshProUGUI>();
             Debug.Log(newText);
 
@@ -106,7 +114,11 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogueForScene(string sceneName)
     {
         Debug.Log("Inside StartDialogue scene");
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 60dced96e2b7f117641b1a46bf659893b04b909c
         // Clear the current dialogue queue to remove leftovers from the previous scene
         currentDialogue?.Clear();
 
@@ -153,7 +165,11 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueBox.SetActive(false);
         dialogueActive = false;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 60dced96e2b7f117641b1a46bf659893b04b909c
     }
 
     IEnumerator TypeSentence(string sentence)

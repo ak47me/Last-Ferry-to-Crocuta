@@ -72,7 +72,11 @@ public class AudioManager : MonoBehaviour
         // Loop the audio if the current playback position exceeds the loop end
         if (audioSource.isPlaying && audioSource.timeSamples >= loopEndSamples)
         {
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 60dced96e2b7f117641b1a46bf659893b04b909c
             audioSource.timeSamples = loopStartSamples; // Reset to loop start
         }
     }
