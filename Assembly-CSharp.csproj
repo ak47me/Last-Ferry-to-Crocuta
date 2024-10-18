@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\DropZoneHands.cs" />
+    <Compile Include="Assets\Scripts\TutorialBackButton.cs" />
     <Compile Include="Assets\Scripts\Map\MapTester.cs" />
     <Compile Include="Assets\Scripts\GenManagers\CombatManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
