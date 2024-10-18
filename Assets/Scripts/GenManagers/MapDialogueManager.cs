@@ -11,6 +11,9 @@ public class MapDialogueManager : MonoBehaviour
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI optionsText;
+    public AudioSource audioSource;  // Reference to the AudioSource component
+    public AudioClip confirmationClip; 
+    public AudioClip declineClip; 
 
     private bool dialogueIsPlaying;
     private bool isInCombat;
@@ -48,15 +51,29 @@ public class MapDialogueManager : MonoBehaviour
             // Wait for player input while in combat dialogue mode
             if (Input.GetKeyDown(KeyCode.Y))  // Confirm
             {
-                print("it is getting pressed");
-                MainManager.Instance.NextLevel("CombatScene");
+                print("Y key is pressed");
 
+                // Play sound
+                if (confirmationClip != null && audioSource != null)
+                {
+                    audioSource.PlayOneShot(confirmationClip);
+                }
+
+                // Load the next level
+                MainManager.Instance.NextLevel("RevCombatScene");
             }
             else if (Input.GetKeyDown(KeyCode.N))
             {
+                // Play sound
+                if (declineClip != null && audioSource != null)
+                {
+                    audioSource.PlayOneShot(declineClip);
+                }
+
                 ExitDialogueMode();
             }
         }
+
     }
 
 

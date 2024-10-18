@@ -7,5 +7,6 @@ public class ScriptableNode : ScriptableObject
 {
     public Sprite sprite;
     public MapNodeData.nodeType nodeType;
+    
 
 }
