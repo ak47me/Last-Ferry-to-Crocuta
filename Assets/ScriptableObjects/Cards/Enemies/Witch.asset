@@ -20,7 +20,15 @@ MonoBehaviour:
   cardName: Witch
   charSpr: {fileID: 21300000, guid: 82b80be8895fb1b4daa6a4bc39082cb7, type: 3}
   suitSpr: {fileID: 21300000, guid: db5ec2edc6f6e5842a98c1380d028e2a, type: 3}
-  effectText: +1 Attack to adjacent enemies.
-  type: 0
+  effectText: 'At the end of your turn: +1 ATK to adjacent enemies.'
+  type: 2
+  effect: 1
+  playType: 0
+  usesPerTurn: 0
+  usesPerCombat: 0
   boardScale: {x: 1, y: 1, z: 1}
   handScale: {x: 1.3, y: 1.3, z: 1.3}
+  effectList:
+  - Change Stats
+  - Change Stats
+  targets: 0100000000000000010000000000000000000000ffffffff00000000010000000000000000000000

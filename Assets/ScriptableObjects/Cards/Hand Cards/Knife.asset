@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e53e32f658fcf66418d63aa392a7a324, type: 3}
+  m_Name: Knife
+  m_EditorClassIdentifier: 
+  maxHealth: 3
+  health: 3
+  def: 0
+  baseAtk: 0
+  atk: 0
+  cardName: Knife
+  charSpr: {fileID: 21300000, guid: 3205910d9cef5a74983e266260b3d5f3, type: 3}
+  suitSpr: {fileID: 21300000, guid: 4462e4ac87c38c742b96b06f1ada2ebe, type: 3}
+  effectText: +2 ATK to card behind this.
+  type: 1
+  effect: 0
+  playType: 2
+  usesPerTurn: 0
+  usesPerCombat: 0
+  boardScale: {x: 1, y: 1, z: 1}
+  handScale: {x: 1.3, y: 1.3, z: 1.3}
+  effectList:
+  - Change Stats
+  targets: 0000000001000000020000000000000000000000

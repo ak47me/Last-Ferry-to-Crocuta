@@ -8,6 +8,7 @@ public class HandArea : MonoBehaviour, IDropHandler
     public void OnDrop(PointerEventData eventData)
     {
         // Get the draggable object being dropped
+        print("we got here");
         CardMover mover = eventData.pointerDrag.GetComponent<CardMover>();
 
         if (mover.locked)
