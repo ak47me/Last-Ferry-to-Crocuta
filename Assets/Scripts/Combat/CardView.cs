@@ -30,6 +30,16 @@ public class CardView : MonoBehaviour
     public bool canAtk = true;
     public int turnsWoAtk = 0;
     public int turnsWoEff = 0;
+    public GameObject highlight; // Reference to the highlight GameObject
+
+    // for the click highlight effect
+    public void SetHighlight(bool isActive)
+    {
+        if (highlight != null)
+        {
+            highlight.SetActive(isActive);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()

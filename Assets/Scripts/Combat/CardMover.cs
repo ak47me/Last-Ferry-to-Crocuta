@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI; 
 
-public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
 {
     public enum moveState
     {
@@ -13,6 +14,7 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         Return,
         Idle,
         Fight,
+        Select,
     }
 
     public CardView card;
@@ -34,6 +36,7 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public Vector3 endScale;
     public float elapsedTime = 0f;
     public bool locked = false;
+    public bool canSelect = false;
 
     public CanvasGroup canvasGroup;
 
@@ -81,8 +84,25 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             case moveState.Fight:
                 Fight();
                 break;
+
+            case moveState.Select:
+                Select();  // Handle Select state
+                break;
+
         }
     }
+
+    public void Select()
+    {
+        if (!canSelect)
+        {
+            return;
+        }
+
+   
+        transform.localScale = Vector3.one * 2f;  // Slightly increase the size
+    }
+
 
     public void Hover()
     {
@@ -261,6 +281,30 @@ public class CardMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
         transform.position = lerpPosition;
     }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (canSelect)
+        {
+            CardView cardView = GetComponent<CardView>();
+            if (cardView != null)
+            {
+                if (this.CompareTag("HandCard"))
+                {
+                    TradeBoard.Instance.SelectHandCard(cardView);
+                }
+                else if (this.CompareTag("BoardCard"))
+                {
+                    TradeBoard.Instance.SelectBoardCard(cardView);
+                }
+                else
+                {
+                    print("nothing is getting selected");
+                }
+            }
+        }
+    }
+
 
     public void Return()
     {
