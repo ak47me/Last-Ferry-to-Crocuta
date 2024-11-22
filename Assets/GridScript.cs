@@ -1,27 +1,52 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System.Collections;
+
 
 public class GridScript : MonoBehaviour
 {
     public GameObject[,] board = new GameObject[3, 3];
     public RectTransform boardTransform;
     public GameObject cardSlotPrefab;
+    public GameObject cardPrefab;         // The card prefab to instantiate
     public Button completeButton;  // Reference to the button
     public int rows = 3;
     public int columns = 3;
     public float horizontalSpacing = 20f;
     public float verticalSpacing = 20f;
-    public CardDisplay[] cardDisplays;
     public Button attackButton;
+    public CardData enemy1;
+    public CardData enemy2;
+    public CardData enemy3;
+    public GameObject debugText;
+    private float _cutsceneTimer = 0;
+    public int[] health = { 10, 10, 15 };
+    public int[] attack = { 4, 5, 7 };
+
+    
 
 
     void Start()
     {
+
+        CardData[] enemies = { enemy1, enemy2, enemy3 };
+
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            enemies[i].cardHealth = health[i];
+            enemies[i].attackPower = attack[i];
+        }
         CreateGrid();
+        debugText.SetActive(false);
+
 
         // Add the button click listener
         completeButton.onClick.AddListener(OnAllCardsPlaced);
         attackButton.onClick.AddListener(HandleAttack);
+
+
+       
     }
 
     void CreateGrid()
@@ -41,35 +66,79 @@ public class GridScript : MonoBehaviour
         float slotHeight = availableHeight / rows;
 
         // Center the grid within the board
-        float startX = -((slotWidth * columns) + totalHorizontalSpacing) / 2 + slotWidth / 2;
-        float startY = ((slotHeight * rows) + totalVerticalSpacing) / 2 - slotHeight / 2;
+        float startX = -boardWidth / 2 + slotWidth / 2;
+        float startY = boardHeight / 2 - slotHeight / 2;
 
         for (int row = 0; row < rows; row++)
         {
             for (int column = 0; column < columns; column++)
             {
-                // Instantiate an empty slot (DropZone)
                 GameObject slotInstance = Instantiate(cardSlotPrefab, boardTransform);
+                // Set slot size dynamically
                 RectTransform slotRectTransform = slotInstance.GetComponent<RectTransform>();
+                DropZone dropZone = slotInstance.GetComponent<DropZone>();
+                // Set the size of the slot
                 slotRectTransform.localScale = Vector3.one;
-
-                // Set the size of the slot dynamically
                 slotRectTransform.sizeDelta = new Vector2(slotWidth, slotHeight);
 
-                // Set the slot's position relative to the board panel
+                // Calculate and set slot position
                 float slotXPosition = startX + (slotWidth + horizontalSpacing) * column;
                 float slotYPosition = startY - (slotHeight + verticalSpacing) * row;
 
                 slotRectTransform.anchoredPosition = new Vector2(slotXPosition, slotYPosition);
 
-                // Assign the slot a position within the grid for future reference
-                DropZone dropZone = slotInstance.GetComponent<DropZone>();
-                dropZone.SetGridPosition(row, column);
+                if (dropZone != null)
+                {
+                    dropZone.SetGridPosition(row, column);
 
-                // Store the slot in the singleton board
+                    // Only set enemy cards in the first row
+                    if (row == 0)
+                    {
+                        CardData enemyCard = null;
+
+                        // Choose the correct enemy based on the column
+                        if (column == 0) enemyCard = enemy1;
+                        else if (column == 1) enemyCard = enemy2;
+                        else if (column == 2) enemyCard = enemy3;
+
+                        if (enemyCard != null)
+                        {
+                            GameObject cardInstance = Instantiate(cardPrefab, slotRectTransform);
+                            Draggable dragcard = cardInstance.GetComponent<Draggable>();
+                            dragcard.enabled = false; 
+                            CardDisplay cardDisplay = cardInstance.GetComponent<CardDisplay>();
+                            RectTransform cardRectTransform = cardInstance.GetComponent<RectTransform>();
+
+                            cardRectTransform.localScale = Vector3.one;
+
+                            // Set the card in the drop zone and update display
+                            dropZone.SetCard(enemyCard);
+
+                            if (cardDisplay != null)
+                            {
+                                cardDisplay.SetupCard(enemyCard);
+                            }
+
+                            // Set the card size to match the slot
+                            cardRectTransform.sizeDelta = slotRectTransform.sizeDelta;
+                        }
+                    }
+                }
+
+                
+
+                // Store the slot in the board array
                 board[row, column] = slotInstance;
             }
         }
+
+    }
+
+
+    private IEnumerator HideTextAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay); // Wait for the specified delay
+        debugText.SetActive(false);             // Hide the debugText after the delay
     }
 
 
@@ -95,15 +164,25 @@ public class GridScript : MonoBehaviour
                 //}
             }
         }
+        TextMeshProUGUI text = debugText.GetComponent<TextMeshProUGUI>();
 
         if (!allSlotsFilled)
         {
             Debug.Log("Not all slots are filled!");
+            text.text = "Not all slots are filled!";
+            debugText.SetActive(true);
+            StartCoroutine(HideTextAfterDelay(3)); // Start coroutine to hide text after 3 seconds
         }
         else
         {
             Debug.Log("All cards placed, abilities activated!");
+            text.text = "All cards placed, abilities activated!";
+            debugText.SetActive(true);
+            StartCoroutine(HideTextAfterDelay(3)); // Start coroutine to hide text after 3 seconds
         }
+
+       
+
     }
 
     private void HandleAbility(CardData cardData)
@@ -296,8 +375,11 @@ public class GridScript : MonoBehaviour
     // Method to display the game over message
     private void DisplayGameOverMessage(string message)
     {
-        // Implement your UI display logic here, e.g., using a UI Text element or a popup
         Debug.Log(message); // Example output to console
+        TextMeshProUGUI text = debugText.GetComponent<TextMeshProUGUI>();
+        text.text = message;
+        debugText.SetActive(true);
+        StartCoroutine(HideTextAfterDelay(3)); 
     }
 
     // Helper method to get card data at a specific position

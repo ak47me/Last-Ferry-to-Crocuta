@@ -15,11 +15,17 @@ EditorBuildSettings:
     path: Assets/Scenes/MapScene.unity
     guid: 352513f4a60db224eb2477006d48575c
   - enabled: 1
+    path: Assets/Scenes/BoardScene.unity
+    guid: 5d6c69a276bcb1d4999e7303c8557999
+  - enabled: 1
     path: Assets/Scenes/CombatScene.unity
     guid: 2bcb732a06857e2489b39e595dd7e5af
   - enabled: 1
     path: Assets/Scenes/ChallengeScene.unity
     guid: 216c7a0b333ad244ba9a4e88ed753176
+  - enabled: 1
+    path: Assets/Scenes/DialogueDemoScene.unity
+    guid: 13d05a02eb1711249bb2a4715ab407f2
   - enabled: 1
     path: Assets/Scenes/ExploreScene.unity
     guid: 3e79a27ceb20bba43af8cf1e6cc2d4f4

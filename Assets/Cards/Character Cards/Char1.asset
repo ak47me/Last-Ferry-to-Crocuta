@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Char1
   m_EditorClassIdentifier: 
   cardName: Sofia
-  _attackPower: 2
-  _health: 12
+  _attackPower: 4
+  _health: 10
   cardImage: {fileID: 21300000, guid: 8f5b8d76accece943ac805b12a5c60dd, type: 3}
   ability: Knight
   posX: 2
   posY: 0
+  cardInfo: Add 1 atk to adjacent allied cards while in play
   cardType: 2

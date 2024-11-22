@@ -13,6 +13,7 @@ public class CardData : ScriptableObject
     public string ability;
     public int posX;
     public int posY;
+    public string cardInfo;
 
     // Original attack power for resetting
     private int _originalAttackPower;

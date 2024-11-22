@@ -31,6 +31,22 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         return currentCard;
     }
 
+    public void SetCard(CardData card)
+    {
+        currentCard = card;
+        card.posX = this.row;
+        card.posY = this.column;
+
+        // Assign the card's sprite to the DropZone's Image component
+        if (dropZoneImage != null)
+        {
+            dropZoneImage.sprite = card.cardImage;  // Ensure card.cardImage is a Sprite
+            dropZoneImage.color = Color.white;      // Make sure the Image is not transparent
+        }
+
+    }
+
+
     public void SetGridPosition(int row, int column)
     {
         this.row = row;
@@ -66,7 +82,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
                 currentCard = draggable.cardData;
                 Debug.Log(currentCard);
                 currentCard.posX = this.row;
-                draggable.cardData.posY = this.column;
+                currentCard.posY = this.column;
 
 
                 Debug.Log($"Card of type {draggable.cardData.cardType} dropped in row {row}, column {column}.");
@@ -76,6 +92,15 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
                 // Optionally, you can snap the card to the center of the DropZone
                 draggable.transform.position = this.transform.position;
+                // Resize the draggable object to match the size of the DropZone
+                RectTransform dropZoneRect = this.GetComponent<RectTransform>();
+                RectTransform draggableRect = draggable.GetComponent<RectTransform>();
+
+                if (dropZoneRect != null && draggableRect != null)
+                {
+                    draggableRect.sizeDelta = dropZoneRect.sizeDelta; // Match size
+                    draggableRect.localScale = Vector3.one; // Reset scale to default (1,1,1)
+                }
             }
             else
             {
